@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>The Fruit Classifier</title>
+    <title>Text To Image Steganography</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-theme.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.0.3.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
 </head>
 <body>
+{% include '_header.html' %}
+<div align="center">
+          <a href="http://localhost:5000/" class="btn btn-large btn-info" >
+          <span class="glyphicon glyphicon-home"></span> Take Me Home</a>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="span12">
             <div class="hero-unit center">
                 <h1>OOPS! <small><font face="Tahoma" color="red">Error !!!</font></small></h1>
-                <a href="http://localhost:5000/" class="btn btn-large btn-info">
-                    <span class="glyphicon glyphicon-home"></span> Take Me Home</a>
-                <div class="col-md-4 list-group">
-                    <p class="text-danger">Possible cause:</p>
+                <div class="col-md-4 list-group"><br><br>
+                    <p class="text-danger">Possible causes:</p><br>
                     <ul>
                         <li class="text-danger">Bad Input </li>
-                        <li class="text-danger">Pressing "Predict" without input </li>
-                        <li class="text-danger">Pressing "Predict" again </li>
                         <li class="text-danger">Corrupted Input </li>
+                        <li class="text-danger">Other Causes </li>
                     </ul>
                 </div>
+
             </div>
+             <br><br>
         </div>
     </div>
 </div>
+<br><br>
 
 </body>
 </html>

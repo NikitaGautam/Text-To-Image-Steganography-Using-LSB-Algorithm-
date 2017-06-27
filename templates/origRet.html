@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Retrieve Page</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-theme.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.0.3.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
+
+    <style>
+        body{
+            font-family: "Times New Roman", Georgia, Serif;
+        }
+
+        .container{
+    margin-top:20px;
+}
+    .image-preview-input {
+        position: relative;
+	    overflow: hidden;
+	    margin: 0px;
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+    }
+    .image-preview-input input[type=file] {
+	    position: absolute;
+	    top: 0;
+	    right: 0;
+	    margin: 0;
+	    padding: 0;
+	    font-size: 20px;
+	    cursor: pointer;
+	    opacity: 0;
+	    filter: alpha(opacity=0);
+    }
+    .image-preview-input-title {
+        margin-left:2px;
+    }
+    </style>
+
+<script>
+
+    $(document).on('click', '#close-preview', function(){
+    $('.image-preview').popover('hide');
+    // Hover befor close the preview
+    $('.image-preview').hover(
+        function () {
+           $('.image-preview').popover('show');
+        },
+         function () {
+           $('.image-preview').popover('hide');
+        }
+    );
+});
+
+$(function() {
+    // Create the close button
+    var closebtn = $('<button/>', {
+        type:"button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+    });
+    closebtn.attr("class","close pull-right");
+    // Set the popover default content
+    $('.image-preview').popover({
+        trigger:'manual',
+        html:true,
+        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
+        content: "There's no image",
+        placement:'bottom'
+    });
+    // Clear event
+    $('.image-preview-clear').click(function(){
+        $('.image-preview').attr("data-content","").popover('hide');
+        $('.image-preview-filename').val("");
+        $('.image-preview-clear').hide();
+        $('.image-preview-input input:file').val("");
+        $(".image-preview-input-title").text("Browse");
+    });
+    // Create the preview image
+    $(".image-preview-input input:file").change(function (){
+        var img = $('<img/>', {
+            id: 'dynamic',
+            width:250,
+            height:200
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+            $(".image-preview-input-title").text("Change");
+            $(".image-preview-clear").show();
+            $(".image-preview-filename").val(file.name);
+            img.attr('src', e.target.result);
+            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+        }
+        reader.readAsDataURL(file);
+    });
+});
+    </script>
+</head>
+<body>
+{% include '_header.html' %}
+<div align="center">
+          <a href="http://localhost:5000/" class="btn btn-large btn-info" >
+          <span class="glyphicon glyphicon-home"></span> Take Me Home</a>
+</div>
+  {% if displayVal == False %}
+<h3 align="center">Retrieve Your Secret Message From Image</h3>
+  {% endif %}
+
+<form action="{{ url_for('retrieve')}}" method="post" enctype="multipart/form-data">
+
+    <div style="margin-left: 20%; margin-right: 20%" id="msgDiv" align="center">
+        {% if displayVal %}
+         <h2 style="color: blue">RETRIEVED SECRET MESSAGE</h2>
+         <h3 id="secretMessage">{{ message }}</h3>
+        {% endif %}
+    </div>
+    <br><br>
+    <input type="submit" class="btn btn-primary" value="Get Message"  style="width: 30%; height: auto; margin-left: 35%" >
+</form>
+
+
+
+</body>
+</html>

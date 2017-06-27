@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Theme Made By www.w3schools.com - No Copyright -->
+  <title>Text To Image Steganography</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-theme.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.0.3.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
+
+  <style>
+  body {
+      font: 20px Montserrat, sans-serif;
+      line-height: 1.8;
+      color: #f5f6f7;
+  }
+  p {font-size: 16px;}
+  .margin {margin-bottom: 45px;}
+  .bg-1 {
+      background-color: #1abc9c; /* Green */
+      color: #ffffff;
+  }
+  .bg-2 {
+      background-color: #474e5d; /* Dark Blue */
+      color: #ffffff;
+  }
+  .bg-3 {
+      background-color: #ffffff; /* White */
+      color: #555555;
+  }
+  .bg-4 {
+      background-color: #2f2f2f; /* Black Gray */
+      color: #fff;
+  }
+  .container-fluid {
+      padding-top: 70px;
+      padding-bottom: 70px;
+  }
+  .navbar {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      font-size: 12px;
+      letter-spacing: 5px;
+  }
+  .navbar-nav  li a:hover {
+      color: #1abc9c !important;
+  }
+
+{#      Previous#}
+
+  </style>
+
+    <script>
+    $(document).on('click', '#close-preview', function(){
+    $('.image-preview').popover('hide');
+    // Hover befor close the preview
+    $('.image-preview').hover(
+        function () {
+           $('.image-preview').popover('show');
+        },
+         function () {
+           $('.image-preview').popover('hide');
+        }
+    );
+});
+
+$(function() {
+    // Create the close button
+    var closebtn = $('<button/>', {
+        type:"button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+    });
+    closebtn.attr("class","close pull-right");
+    // Set the popover default content
+    $('.image-preview').popover({
+        trigger:'manual',
+        html:true,
+        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
+        content: "There's no image",
+        placement:'bottom'
+    });
+    // Clear event
+    $('.image-preview-clear').click(function(){
+        $('.image-preview').attr("data-content","").popover('hide');
+        $('.image-preview-filename').val("");
+        $('.image-preview-clear').hide();
+        $('.image-preview-input input:file').val("");
+        $(".image-preview-input-title").text("Browse");
+    });
+    // Create the preview image
+    $(".image-preview-input input:file").change(function (){
+        var img = $('<img/>', {
+            id: 'dynamic',
+            width:250,
+            height:200
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+            $(".image-preview-input-title").text("Change");
+            $(".image-preview-clear").show();
+            $(".image-preview-filename").val(file.name);
+            img.attr('src', e.target.result);
+            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+        }
+        reader.readAsDataURL(file);
+    });
+});
+</script>
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#" style="color: black; font-family: Sans-serif;">Text To Image Steganography Using LSB Algorithm</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+      </ul>
+    </div>
+  </div>
+</nav>
+<div >
+
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" name="dataForm" id="dataForm">
+
+<!-- First Container -->
+<div class="container-fluid bg-1 text-center" style="height: 500px;">
+  <h3 class="margin">Select A Carrier Image</h3>
+   <div class="container">
+    <div class="row">
+
+             <div class="col-xs-12 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <!-- image-preview-filename input [CUT FROM HERE]-->
+            <div class="input-group image-preview">
+
+                <input type="text" style="width: 350px; height: 56px;" class="form-control image-preview-filename" disabled="disabled" />
+                <span class="input-group-btn">
+                   <!-- image-preview-clear button -->
+
+                    <!-- image-preview-input -->
+
+                    <div class="btn btn-default image-preview-input">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        <span class="image-preview-input-title">Browse</span>
+                        <input type="file" accept="image/*" style=" opacity: 0; filter: alpha(opacity=0);"  name="file" id="file" >
+                    </div>
+
+                </span>
+
+
+            </div><!-- /input-group image-preview [TO HERE]-->
+        </div>
+
+    </div>
+</div>
+</div>
+
+<!-- Second Container -->
+<div class="container-fluid bg-2 text-center">
+  <h3 class="margin">Enter A Secret Message</h3>
+     <textarea class="form-control" rows="4" id="message" name="message" style="width: 48%; margin-left: 30%;" required></textarea>
+     <br><br><br>
+    <input type="submit" onclick="return validateData();" class="btn btn-primary" value="Hide Message"  style="margin-left: 6%; height: 60px; font-size: large; width: 300px;" >
+</div>
+</form>
+</div>
+<script>
+    function validateData(){
+        if($("#file").val().length == 0){
+            alert("Error! Image not selected.");
+            return false;
+        }
+        else if($("#message").val().length == 0){
+            alert("Error! Message should not be empty.");
+            return false;
+        }
+        else {
+            return true;
+        }
+
+    }
+</script>
+<!-- Footer -->
+ <footer style="color: black; margin-left: 42%;"> 
+    <p>© Nikita Gautam - Mini Project - Batch 2017</p> 
+</footer> 
+
+</body>
+</html>
+
